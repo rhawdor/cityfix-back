@@ -111,13 +111,21 @@ public class SpinalCoreConnector {
                 .orElse(new RoomControlEndpoints().setEndpoints(List.of()));
     }
 
-    private List<BasicObject> doBasicListRequest(String buildingURL, String FLOOR_API) {
-        RequestEntity<List<SpinalCoreBasicObject>> request = new RequestEntity<>(HttpMethod.GET, URI.create(buildingURL + FLOOR_API));
+    private List<BasicObject> doBasicListRequest(String buildingURL, String PARAM_API) {
+        RequestEntity<List<SpinalCoreBasicObject>> request = new RequestEntity<>(HttpMethod.GET, URI.create(buildingURL + PARAM_API));
         return Objects.requireNonNull(restTemplate.exchange(request, new ParameterizedTypeReference<List<SpinalCoreBasicObject>>() {})
                         .getBody())
                 .stream()
                 .map(spinalCoreMapper::mapToBasicObject)
                 .toList();
+    }
+
+    @Cacheable(value = "building")
+    public BasicObject getBuilding(String buildingURL) {
+        final String PARAM_API = "building/read";
+        RequestEntity<SpinalCoreBasicObject> request = new RequestEntity<>(HttpMethod.GET, URI.create(buildingURL + PARAM_API));
+        var building = restTemplate.exchange(request, SpinalCoreBasicObject.class).getBody();
+        return spinalCoreMapper.mapToBasicObject(building);
     }
 
 }

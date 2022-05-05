@@ -12,6 +12,6 @@ public class CachingConfig {
 
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("floors", "roomsFromFloor", "controlEndpoints", "roomControlEndpoints");
+        return new ConcurrentMapCacheManager("floors", "roomsFromFloor", "controlEndpoints", "roomControlEndpoints", "building", "gazContext", "waterContext");
     }
 }
